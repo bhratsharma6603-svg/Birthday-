@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🎉 Birthday Surprise 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+html, body {
+  margin:0; padding:0;
+  width:100%; height:100%;
+  display:flex; justify-content:center; align-items:center;
+  font-family:'Poppins',sans-serif;
+  background:#fff; overflow:hidden;
+}
+.particle {
+  position:absolute; border-radius:50%; opacity:0.7;
+  pointer-events:none; animation: floatParticle linear infinite;
+}
+@keyframes floatParticle {
+  0% {transform:translateY(0) rotate(0deg); opacity:.5;}
+  50% {transform:translateY(-26vh) rotate(180deg); opacity:1;}
+  100% {transform:translateY(-115vh) rotate(360deg); opacity:0;}
+}
+.container {width:100%; max-width:400px; margin:0 auto; text-align:center;}
+.card {
+  display:inline-block;
+  background: rgba(255,255,255,0.95);
+  padding:36px 25px;
+  border-radius:28px;
+  box-shadow: 0 7px 36px rgba(255,0,127,0.13);
+  margin:20px 0;
+  text-align:center;
+  min-width:260px;
+}
+h1, .song-header {
+  font-family:'Great Vibes', cursive;
+  font-size:2.1em;
+  color:#ff007f;
+  text-shadow:0 2px 12px #b9fff799,0 0 8px #ffaad4;
+}
+.fancy-song {
+  background: linear-gradient(45deg,#ffc1fa,#b9fff7);
+  border:none; color:#40004d;
+  font-size:1.1em; font-weight:600;
+  border-radius:23px; padding:15px 32px;
+  margin:11px 0; cursor:pointer;
+  transition:0.3s all; position:relative;
+}
+.fancy-song:hover {
+  transform:scale(1.08);
+  background: linear-gradient(45deg,#ffb6b9,#fae3ff);
+}
+.fancy-song.selected {
+  background: linear-gradient(45deg,#ff007f,#ff4081);
+  color:white; transform:scale(1.13);
+}
+.continue-btn {
+  margin-top:13px; padding:12px 26px;
+  border-radius:13px; border:none;
+  font-size:1.1em; font-weight:700;
+  cursor:pointer; color:#fff;
+  background: linear-gradient(135deg,#ff007f 60%,#6a4cff 100%);
+  transition:0.3s;
+}
+.continue-btn:hover { background: linear-gradient(120deg,#fd5e81 60%,#5c37be 100%);}
+input[type=text] {
+  padding:12px; width:88%;
+  border-radius:13px; border:2px solid #ff007f;
+  text-align:center; font-size:1.1em;
+  margin-bottom:8px;
+}
+#audioPlayerContainer audio {width:96%; margin-top:10px; border-radius:14px;}
+.countdown {font-size:2em; color:#ff007f; font-weight:700; display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);}
+.dob-help {color:#9c58ad; margin-bottom:8px;font-size:0.95em;}
+.message-part {
+  font-family:'Great Vibes', cursive;
+  font-size:1.17em; color:#ff007f;
+  margin:18px 0 12px; opacity:0;
+  transform:translateY(30px); animation:showMsg 0.7s forwards;
+}
+@keyframes showMsg {
+  to { opacity:1; transform:translateY(0);}
+}
+#nextMsgBtn, #replyBtn {
+  margin:10px 8px 0 8px; padding:12px 28px;
+  border-radius:13px; border:none;
+  font-size:1.1em; font-weight:700;
+  cursor:pointer; color:#fff;
+  background: linear-gradient(135deg,#ff007f 60%,#6a4cff 100%);
+  transition:0.3s;
+}
+#nextMsgBtn:hover, #replyBtn:hover { background: linear-gradient(120deg,#fd5e81 60%,#5c37be 100%);}
+#thankYou { color:#34c759; font-size:1.07em; margin-top:24px; font-weight:600; letter-spacing:1px;}
+#nameSticker, #dobSticker {
+  width: 110px;
+  max-width: 98%;
+  margin: 11px auto;
+  display: block;
+  border-radius: 15px;
+}
+#stickerImg { width:160px; margin:10px auto; display:block; border-radius:15px;}
+</style>
+</head>
+<body>
+<script>
+for(let i=0;i<50;i++){
+  const p=document.createElement('div');
+  p.classList.add('particle');
+  const size=7+Math.random()*13;
+  p.style.width=size+'px';
+  p.style.height=size+'px';
+  p.style.background=['#ff6b81','#ffda6b','#ace2ff','#d18aff','#ff9f68','#00e0b7'][Math.floor(Math.random()*6)];
+  p.style.left=Math.random()*100+'%';
+  p.style.top=Math.random()*100+'%';
+  p.style.animationDuration=4+Math.random()*6+'s';
+  document.body.appendChild(p);
+}
+</script>
+
+<div class="container" id="songSelectionContainer">
+  <div class="card">
+    <h1 class="song-header">🎵 Select a Song 🎵</h1>
+    <div style="margin-bottom:10px;">Pick your favorite track for birthday vibes! 🎉</div>
+    <button class="fancy-song" id="songBtn0" onclick="playSong(0)">🎂 Baar Baar Din Yeh Aaye</button>
+    <button class="fancy-song" id="songBtn1" onclick="playSong(1)">🕺🏻 Aww Tera Happy Bday</button>
+    <button class="fancy-song" id="songBtn2" onclick="playSong(2)">🎹 Indila Love Story Piano</button>
+    <div id="audioPlayerContainer">
+      <audio id="bgMusic" controls preload="auto"></audio>
+    </div>
+    <button class="continue-btn" onclick="continueToForm()">Continue ▶️</button>
+  </div>
+</div>
+
+<div class="container" id="formContainer" style="display:none;">
+  <div class="card">
+    <h1>🎂 Happy Birthday 🎂</h1>
+    <div>Enter your name ❤️</div>
+    <img id="nameSticker" src="https://www.dropbox.com/scl/fi/s363v7naxfgr7lgxpqgnf/images-1.png?rlkey=3z3zebs9lm50yi6reyzhm9g4n&dl=1" />
+    <input type="text" id="name" placeholder="Your Name">
+    <div class="dob-help" id="dobHelp" style="display:none;">Enter DOB in any format: 11 Jan 2005 / 11-01-2005 / 11 01 2005</div>
+    <img id="dobSticker" src="https://www.dropbox.com/scl/fi/hckb8bnill7607oemldrx/images-4.jpeg?rlkey=npe0gj5iocpb6p58pdzctxema&dl=1" style="display:none;" />
+    <button class="continue-btn" onclick="nextStep()">Continue ▶️</button>
+  </div>
+</div>
+
+<div class="countdown" id="countdown"></div>
+
+<script>
+const songs = [
+  "https://www.dropbox.com/scl/fi/5y5i9414o7zpoquru1w9a/Baar-Baar-Din-Yeh-Aaye-no-names-without-Sunita-Happy-Birthday-Sonu-Nigam-Shifa-Asgarali.mp3?rlkey=uo5ew6p76u0qzvvbknmdj30xi&dl=1",
+  "https://www.dropbox.com/scl/fi/6r9y5dypedrelqdquqnl4/Aww-Tera-Happy-BdayABCD-2-Varun-Dhawan-Shraddha-Kapoor-Sachin-Jigar-D.Soldierz-Birthday-song.mp3?rlkey=hremhkr47wgrwc0n3jju9d82r&dl=1",
+  "https://www.dropbox.com/scl/fi/btb5uieyme35a94ide378/Indila-Love-Story-Piano-Cover.mp3?rlkey=62vvtady5vhxc52rb7u5dt37v&dl=1"
+];
+let currentSongIndex=-1;
+const bgMusic=document.getElementById('bgMusic');
+const songButtons=[document.getElementById('songBtn0'),document.getElementById('songBtn1'),document.getElementById('songBtn2')];
+
+function playSong(index){
+  currentSongIndex=index;
+  bgMusic.pause();
+  bgMusic.src=songs[index];
+  bgMusic.load();
+  bgMusic.play().catch(()=>{});
+  songButtons.forEach((btn,i)=>btn.classList.toggle("selected",i===index));
+}
+
+function continueToForm(){
+  if(currentSongIndex===-1){ alert('Select a song first!'); return; }
+  document.getElementById('songSelectionContainer').style.display='none';
+  document.getElementById('formContainer').style.display='block';
+  document.getElementById('dobHelp').style.display='block';
+  document.getElementById('dobSticker').style.display='block';
+}
+
+function parseDOB(input){
+  input = input.trim();
+  const reg1 = /^(\d{1,2})[ -]?([A-Za-z]{3})[ -]?(\d{4})$/;
+  const reg2 = /^(\d{1,2})[ -](\d{1,2})[ -](\d{4})$/;
+  let m1 = input.match(reg1);
+  if(m1){
+    const months = {Jan:"01",Feb:"02",Mar:"03",Apr:"04",May:"05",Jun:"06",Jul:"07",Aug:"08",Sep:"09",Oct:"10",Nov:"11",Dec:"12"};
+    let mon = m1[2][0].toUpperCase() + m1[2].slice(1,3).toLowerCase();
+    if(months[mon]) return `${m1[1].padStart(2,'0')}-${months[mon]}-${m1[3]}`;
+  }
+  let m2 = input.match(reg2);
+  if(m2) return `${m2[1].padStart(2,'0')}-${m2[2].padStart(2,'0')}-${m2[3]}`;
+  return null;
+}
+
+let step=1, userName='', userDob='';
+function nextStep(){
+  const nameInput=document.getElementById('name');
+  const nameSticker=document.getElementById('nameSticker');
+  const dobSticker=document.getElementById('dobSticker');
+  if(step===1){
+    userName=nameInput.value.trim();
+    if(!userName){alert('Enter your name!');return;}
+    nameInput.value='';
+    nameInput.placeholder='Enter your DOB';
+    step++;
+    nameSticker.style.display='none';
+    dobSticker.style.display='block';
+  }else{
+    let dob=parseDOB(nameInput.value);
+    if(!dob){alert('Invalid DOB! Use 11 Jan 2005 / 11-01-2005 / 11 01 2005'); return;}
+    userDob=dob;
+    document.getElementById('formContainer').style.display='none';
+    startCountdown();
+  }
+}
+
+function startCountdown(){
+  const countdown=document.getElementById('countdown');
+  countdown.style.display='block';
+  let count=3;
+  countdown.textContent=count;
+  const interval=setInterval(()=>{
+    count--; countdown.textContent=count;
+    if(count===0){ clearInterval(interval); countdown.style.display='none'; showMessageIntro(); }
+  },1000);
+}
+
+function calculateAge(){
+  const [d,m,y]=userDob.split('-').map(Number);
+  let age=new Date().getFullYear()-y;
+  const today=new Date();
+  if(today<new Date(today.getFullYear(),m-1,d)) age--;
+  return age;
+}
+
+const messages = [
+  "Hey {name}! 🎉 Today is your special day, an amazing chapter starts! 🥳",
+  "Your smile, humor, and positive vibes brighten everyone's day. 💖",
+  "Last year's memories are unforgettable… laughter and special moments just for us. 🌸",
+  "Wishing you success, happiness, and love all around. May every dream come true! 🎈",
+  "You are special and keep shining! Once again, Happy Birthday! 💌 Extra cake slice reserved 😉"
+];
+
+const stickers = [
+  "https://www.dropbox.com/scl/fi/ipc07qvya8jcq1gq0itbj/cute.gif?rlkey=zn0w9f7737258cftaepdpo1gn&dl=1",
+  "https://www.dropbox.com/scl/fi/5i8lpxxo5xial7k3ytz8q/birthday-cake.gif?rlkey=4x8k9ihnfl2kf3fuz7axyo3o8&dl=1",
+  "https://www.dropbox.com/scl/fi/v3olb7is47m7bnzl12r0c/peach-goma-love-heart-dance.gif?rlkey=fkm3yww94ktsuqctswg366rvd&dl=1",
+  "https://www.dropbox.com/scl/fi/5cmm915ikztjrf2agw5ef/images-3.jpeg?rlkey=wigd9m79toc83m671fgcg39bg&dl=1",
+  "https://www.dropbox.com/scl/fi/yd81th1ji428yf9mqj6ww/0138062cafd76649d464f756402676b5.gif?rlkey=wxiap2akd92ciwh4bo7ef4mag&dl=1",
+  "https://www.dropbox.com/scl/fi/878tfxcicc8qozicyfgyu/5755588e2331f32d9575d25df293395f.gif?rlkey=r562tmukvi8jgay2umd0yayzh&dl=1",
+  "https://www.dropbox.com/scl/fi/lqtgh2cvl922bjvprxqws/images.png?rlkey=hzuzwr9lf4p5laa6ga573v0fo&dl=1"
+];
+
+let currentPart = 0;
+function showMessageIntro(){
+  const container=document.createElement('div');
+  container.className='card container';
+  let age=calculateAge();
+  container.innerHTML=`<h1>🎂 Happy ${age}th Birthday, ${userName}! 🎉</h1>
+    <div id="msgDiv" class="message-part"></div>
+    <img id="stickerImg" src="" />
+    <button id="nextMsgBtn" class="continue-btn">Next ▶️</button>
+    <button id="replyBtn" class="continue-btn" style="display:none;">Reply</button>
+    <div id="thankYou" style="display:none;">Thank you for reading! 💖</div>`;
+  document.body.appendChild(container);
+  currentPart = 0;
+  showCurrentPart();
+
+  document.getElementById('nextMsgBtn').onclick=function(){
+    currentPart++;
+    showCurrentPart();
+  };
+  document.getElementById('replyBtn').onclick=function(){
+    if(currentPart>0) currentPart--;
+    showCurrentPart();
+  };
+}
+
+function showCurrentPart(){
+  const msgDiv = document.getElementById('msgDiv');
+  const stickerImg = document.getElementById('stickerImg');
+  msgDiv.style.animation='none'; void msgDiv.offsetWidth;
+  let msg = messages[currentPart].replace('{name}', userName);
+  msgDiv.textContent = msg;
+  msgDiv.style.animation='showMsg 0.7s forwards';
+
+  if(currentPart < stickers.length){
+    stickerImg.src = stickers[currentPart];
+    stickerImg.style.display = 'block';
+  } else {
+    stickerImg.style.display = 'none';
+  }
+
+  if(currentPart===messages.length-1){
+    document.getElementById('nextMsgBtn').style.display='none';
+    document.getElementById('replyBtn').style.display='inline-block';
+    document.getElementById('thankYou').style.display='block';
+  } else {
+    document.getElementById('nextMsgBtn').style.display='inline-block';
+    document.getElementById('replyBtn').style.display='inline-block';
+    document.getElementById('thankYou').style.display='none';
+  }
+}
+</script>
+</body>
+</html>
